@@ -1,7 +1,5 @@
 package com.pufang.DyDanMu.dyDanMu;
 
-import com.pufang.DyDanMu.domain.RoomInfo;
-
 import javax.persistence.MappedSuperclass;
 
 /**
@@ -15,7 +13,7 @@ public class DMRoomProperties {
     int groupId = -9999;
     String hostName = "danmu.douyu.com";
     int port = 8601;
-    int MaxBufferLength = 4096;
+    int MaxBufferLength = 8192;
 
 
     public int getRoomId() {
