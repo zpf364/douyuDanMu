@@ -6,12 +6,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class DMClient {
 	Logger logger = LoggerFactory.getLogger(DMClient.class);
@@ -42,6 +41,19 @@ public class DMClient {
     	this.joinGroup(dmRoomProperties.getRoomId(), dmRoomProperties.getGroupId());
     	//设置客户端就绪标记为就绪状态
     	readyFlag = true;
+    }
+
+    public void reconnect() {
+
+        try {
+            if (sock != null) {
+                sock.close();
+            }
+        } catch (Exception e) {
+
+        }
+
+        init();
     }
 
 	public DMRoomProperties getDmRoomProperties() {
@@ -172,7 +184,15 @@ public class DMClient {
 		try {
 			//读取服务器返回信息，并获取返回信息的整体字节长度
 			int recvLen = bis.read(recvByte, 0, recvByte.length);
-			
+
+            if (recvLen <= 0) {
+                Thread.sleep(500);
+                this.reconnect();
+            }
+
+            if (recvLen <= 12) {
+                return msgViewList;
+            }
 			//根据实际获取的字节数初始化返回信息内容长度
 			byte[] realBuf = new byte[recvLen];
 			//按照实际获取的字节长度读取返回信息
@@ -196,7 +216,14 @@ public class DMClient {
 			//分析该包的数据类型，以及根据需要进行业务操作
 			msgViewList.add(msgView);
 			//parseServerMsg(msgView.getMessageList());
-		} catch (Exception e) {
+        } catch (SocketException e) {
+            try {
+                Thread.sleep(3000);
+            } catch (Exception ex) {
+
+            }
+            this.reconnect();
+        } catch (Exception e) {
 			e.printStackTrace();
 		}
 		return msgViewList;
