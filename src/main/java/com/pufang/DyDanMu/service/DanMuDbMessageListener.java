@@ -38,6 +38,10 @@ public class DanMuDbMessageListener implements MessageListener {
 
         logger.debug("DanMuDbMessageListener save data json{}",JSON.toJSONString(message));
         DanMu danmu = JSON.parseObject(JSON.toJSONString(message),DanMu.class);
+
+        if (StringUtils.isBlank(danmu.getTxt()) || danmu.getUid() == 0L || StringUtils.isBlank(danmu.getNn())) {
+            return;
+        }
         danMuRepository.save(danmu);
     }
 }

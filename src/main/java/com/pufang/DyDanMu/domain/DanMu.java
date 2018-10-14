@@ -1,8 +1,6 @@
 package com.pufang.DyDanMu.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -33,6 +31,8 @@ public class DanMu {
     /**
      * 消息时间
      */
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date cst;
     /**
      * 消息类型
@@ -50,10 +50,6 @@ public class DanMu {
      * 发言内容
      */
     private String txt;
-    /**
-     * 消息唯一id
-     */
-    private String cid;
     private short fl;
     private short ifs;
     //private short el;
@@ -135,13 +131,6 @@ public class DanMu {
         this.txt = txt;
     }
 
-    public String getCid() {
-        return cid;
-    }
-
-    public void setCid(String cid) {
-        this.cid = cid;
-    }
 
     public short getFl() {
         return fl;
