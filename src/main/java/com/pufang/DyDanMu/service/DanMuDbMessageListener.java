@@ -31,28 +31,29 @@ public class DanMuDbMessageListener implements MessageListener {
 
     @Override
     public void doMessage(MsgView msgView) {
-        logger.debug("DanMuDbMessageListener save data {}",msgView.getMessageList().toString());
+        logger.debug("DanMuDbMessageListener save data {}", msgView.getMessageList().toString());
 
-        Map<String,Object> message = msgView.getMessageList();
+        Map<String, Object> message = msgView.getMessageList();
 
-        String cst = message.getOrDefault("cst",System.currentTimeMillis()).toString();
-        if (StringUtils.length(cst)<11){
-            message.put("cst",Long.valueOf(cst)*1000);
+        String cst = message.getOrDefault("cst", System.currentTimeMillis()).toString();
+        if (StringUtils.length(cst) < 11) {
+            message.put("cst", Long.valueOf(cst) * 1000);
         }
 
-        logger.debug("DanMuDbMessageListener save data json{}",JSON.toJSONString(message));
-        DanMu danmu = JSON.parseObject(JSON.toJSONString(message),DanMu.class);
+        logger.debug("DanMuDbMessageListener save data json{}", JSON.toJSONString(message));
+        DanMu danmu = JSON.parseObject(JSON.toJSONString(message), DanMu.class);
 
         if (StringUtils.isBlank(danmu.getTxt()) || danmu.getUid() == 0L || StringUtils.isBlank(danmu.getNn())) {
             return;
         }
 
-        danMuList.add(danmu);
-
-        if (danMuList.size() > 100) {
-            logger.info("save data with size {}", danMuList.size());
-            danMuRepository.saveAll(danMuList);
-            danMuList.clear();
+        synchronized (DanMuDbMessageListener.class) {
+            danMuList.add(danmu);
+            if (danMuList.size() > 100) {
+                logger.info("save data with size {}", danMuList.size());
+                danMuRepository.saveAll(danMuList);
+                danMuList.clear();
+            }
         }
     }
 }
