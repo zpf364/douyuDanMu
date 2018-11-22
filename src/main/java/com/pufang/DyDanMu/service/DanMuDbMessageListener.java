@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,6 +26,8 @@ public class DanMuDbMessageListener implements MessageListener {
 
     @Autowired
     DanMuRepository danMuRepository;
+
+    List<DanMu> danMuList = new LinkedList<>();
 
     @Override
     public void doMessage(MsgView msgView) {
@@ -42,6 +46,12 @@ public class DanMuDbMessageListener implements MessageListener {
         if (StringUtils.isBlank(danmu.getTxt()) || danmu.getUid() == 0L || StringUtils.isBlank(danmu.getNn())) {
             return;
         }
-        danMuRepository.save(danmu);
+
+        danMuList.add(danmu);
+
+        if (danMuList.size() > 1000) {
+            danMuRepository.saveAll(danMuList);
+            danMuList.clear();
+        }
     }
 }
