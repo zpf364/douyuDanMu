@@ -27,7 +27,7 @@ public class DanMuDbMessageListener implements MessageListener {
     @Autowired
     DanMuRepository danMuRepository;
 
-    List<DanMu> danMuList = new LinkedList<>();
+    static List<DanMu> danMuList = new LinkedList<>();
 
     @Override
     public void doMessage(MsgView msgView) {
@@ -49,7 +49,8 @@ public class DanMuDbMessageListener implements MessageListener {
 
         danMuList.add(danmu);
 
-        if (danMuList.size() > 1000) {
+        if (danMuList.size() > 100) {
+            logger.info("save data with size {}", danMuList.size());
             danMuRepository.saveAll(danMuList);
             danMuList.clear();
         }
