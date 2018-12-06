@@ -59,6 +59,27 @@ public class DanMu {
      */
     private short bl;
 
+    /**
+     * 弹幕颜色
+     */
+    private int col;
+
+    /**
+     * 贵族标识
+     */
+    private short nc;
+
+    /**
+     * 反向
+     */
+    private short rev;
+
+    /**
+     * 高亮弹幕
+     */
+    private short hl;
+
+
     public long getId() {
         return id;
     }
@@ -170,5 +191,37 @@ public class DanMu {
 
     public void setBl(short bl) {
         this.bl = bl;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public void setCol(int col) {
+        this.col = col;
+    }
+
+    public short getNc() {
+        return nc;
+    }
+
+    public void setNc(short nc) {
+        this.nc = nc;
+    }
+
+    public short getRev() {
+        return rev;
+    }
+
+    public void setRev(short rev) {
+        this.rev = rev;
+    }
+
+    public short getHl() {
+        return hl;
+    }
+
+    public void setHl(short hl) {
+        this.hl = hl;
     }
 }

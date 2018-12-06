@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,13 @@ public class DanMuDbMessageListener implements MessageListener {
                 danMuRepository.saveAll(danMuList);
                 danMuList.clear();
             }
+        }
+    }
+
+    @PreDestroy
+    public void preDestory() {
+        if (danMuList.size() > 0) {
+            danMuRepository.saveAll(danMuList);
         }
     }
 }
